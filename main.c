@@ -1,24 +1,53 @@
+#include <ncurses.h>
 #include <stdio.h>
+#include <stdlib.h>
+
 #define ROWS 10
 #define COLS 10
 
-int head_x;
-int head_y;
-int score;
-int gameover;
+int head_x = 0;
+int head_y = 0;
+int score = 0;
+int gameover = 0;
 
-// draw game boundaries
-void drawBounds(void);
-// initialize everything
+void draw(void);
 void setup(void);
+void gameloop(void);
+void drawSnake(void);
+void update(void);
 
 int main(void) {
-  setup();
+  // setup();
+  gameloop();
   return 0;
 }
 
-void setup(void) { drawBounds(); }
-void drawBounds(void) {
+void gameloop(void) {
+  while (!gameover) {
+    draw();
+    update();
+  }
+}
+void update(void) {
+  switch (getch()) {
+    case KEY_UP:
+      head_y += 1;
+      break;
+    case KEY_DOWN:
+      head_y -= 1;
+      break;
+    case KEY_LEFT:
+      head_x += 1;
+      break;
+    case KEY_RIGHT:
+      head_x -= 1;
+      break;
+  }
+  return;
+}
+void setup(void) { draw(); }
+void draw(void) {
+  system("clear");
   for (int i = 0; i < COLS; i++)
     printf("_");
 
@@ -26,7 +55,11 @@ void drawBounds(void) {
   for (int i = 0; i < ROWS; i++) {
     printf("|");
     for (int j = 0; j < COLS; j++) {
-      printf(" ");
+      if (i == head_y && j == head_x) {
+        printf("#");
+      } else {
+        printf(" ");
+      }
     }
     printf("|\n");
   }
